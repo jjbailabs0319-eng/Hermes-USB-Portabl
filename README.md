@@ -1,4 +1,4 @@
-# OpenClaw USB Portable
+# OpenClaw USB Portable ⚡
 
 Run OpenClaw from a portable workspace on Windows, Linux, and macOS.
 
@@ -21,7 +21,7 @@ run.sh    Linux and macOS
 
 Everything else is internal runtime, configuration, or portable workspace data.
 
-## What It Does
+## What It Does ✨
 
 - Downloads a portable Node.js runtime into this project on first run.
 - Installs OpenClaw into a project-local package folder.
@@ -31,7 +31,7 @@ Everything else is internal runtime, configuration, or portable workspace data.
 
 This is a portable workspace, not a single universal binary. Each operating system has its own runtime because Windows, Linux, and macOS use different binaries.
 
-## Quick Start
+## Quick Start 🚀
 
 ### Windows
 
