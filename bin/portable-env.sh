@@ -1,8 +1,18 @@
 #!/usr/bin/env sh
 set -eu
 
-ROOT=$1
-PLATFORM=$2
+ROOT=${PORTABLE_ENV_ROOT:-${ROOT:-}}
+PLATFORM=${PORTABLE_ENV_PLATFORM:-${PLATFORM:-}}
+
+if [ -z "$ROOT" ] || [ -z "$PLATFORM" ]; then
+  if [ "$#" -ge 2 ]; then
+    ROOT=$1
+    PLATFORM=$2
+  else
+    echo "portable-env.sh requires ROOT and PLATFORM."
+    return 1 2>/dev/null || exit 1
+  fi
+fi
 
 PACKAGE_ROOT="$ROOT/packages/$PLATFORM"
 NPM_PREFIX="$PACKAGE_ROOT/npm-global"
@@ -26,6 +36,7 @@ export npm_config_cache="$NPM_CACHE"
 export npm_config_update_notifier=false
 export npm_config_fund=false
 export npm_config_audit=false
+export npm_config_bin_links=false
 export PATH="$NODE_ROOT/bin:$NPM_PREFIX/bin:$PATH"
 
 mkdir -p \

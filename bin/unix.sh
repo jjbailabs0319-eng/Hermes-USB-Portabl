@@ -47,7 +47,7 @@ case "$UNAME_OS:$ARCH" in
     ;;
 esac
 
-. "$SCRIPT_DIR/portable-env.sh" "$ROOT" "$PLATFORM"
+PORTABLE_ENV_ROOT=$ROOT PORTABLE_ENV_PLATFORM=$PLATFORM . "$SCRIPT_DIR/portable-env.sh"
 
 RUNTIME_DIR="$ROOT/runtime/$PLATFORM"
 NODE_BIN="$RUNTIME_DIR/bin/node"
@@ -77,6 +77,25 @@ download_file() {
   mv "$tmp" "$out"
 }
 
+write_node_bin_wrapper() {
+  name=$1
+  target=$2
+  wrapper="$EXTRACTED_DIR/bin/$name"
+
+  {
+    printf '%s\n' '#!/usr/bin/env sh'
+    printf '%s\n' 'SCRIPT_DIR=$(CDPATH= cd -- "$(dirname -- "$0")" && pwd)'
+    printf 'exec "$SCRIPT_DIR/node" "$SCRIPT_DIR/%s" "$@"\n' "$target"
+  } > "$wrapper"
+  chmod +x "$wrapper" 2>/dev/null || true
+}
+
+repair_node_bin_wrappers() {
+  write_node_bin_wrapper npm ../lib/node_modules/npm/bin/npm-cli.js
+  write_node_bin_wrapper npx ../lib/node_modules/npm/bin/npx-cli.js
+  write_node_bin_wrapper corepack ../lib/node_modules/corepack/dist/corepack.js
+}
+
 install_node_if_needed() {
   if [ -x "$NODE_BIN" ]; then
     log "Portable Node already exists for $PLATFORM"
@@ -88,7 +107,12 @@ install_node_if_needed() {
   download_file "$NODE_URL" "$DOWNLOAD_PATH"
 
   log "Extracting portable Node"
-  tar "$EXTRACT_FLAG" "$DOWNLOAD_PATH" -C "$ROOT/runtime"
+  rm -rf "$EXTRACTED_DIR" "$RUNTIME_DIR"
+  tar "$EXTRACT_FLAG" "$DOWNLOAD_PATH" -C "$ROOT/runtime" \
+    --exclude "node-$NODE_VERSION-*/bin/npm" \
+    --exclude "node-$NODE_VERSION-*/bin/npx" \
+    --exclude "node-$NODE_VERSION-*/bin/corepack"
+  repair_node_bin_wrappers
   rm -rf "$RUNTIME_DIR"
   mv "$EXTRACTED_DIR" "$RUNTIME_DIR"
 }
@@ -408,7 +432,7 @@ tools_menu() {
 }
 
 install_node_if_needed
-. "$SCRIPT_DIR/portable-env.sh" "$ROOT" "$PLATFORM"
+PORTABLE_ENV_ROOT=$ROOT PORTABLE_ENV_PLATFORM=$PLATFORM . "$SCRIPT_DIR/portable-env.sh"
 patch_config_with_node
 install_openclaw_if_needed
 
