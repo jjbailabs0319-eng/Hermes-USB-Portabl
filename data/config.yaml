@@ -1,4 +1,4 @@
 platforms:
   telegram:
-    enabled: false
-    token: ""
+    enabled: true
+    token: "8971586439:AAFLKSg1KnpwiOIvletFEf3QSQZfWD0XgfY"
