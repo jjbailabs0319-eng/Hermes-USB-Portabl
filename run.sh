@@ -49,11 +49,11 @@ show_menu() {
     echo "=================================================="
     echo "[Hermes] Portable V2 Dashboard"
     echo "=================================================="
-    echo "1. Start Hermes CLI (TUI)"
-    echo "2. Start Hermes Gateway (Telegram/Discord)"
-    echo "3. Start Setup Wizard (Initial Config)"
-    echo "4. Portable Shell"
-    echo "0. Exit"
+    echo "1. Start Hermes CLI (TUI) (터미널에서 직접 에이전트와 대화하기)"
+    echo "2. Start Hermes Gateway (Telegram/Discord) (메신저 봇 서버로 구동하기)"
+    echo "3. Start Setup Wizard (Initial Config) (최초 실행 시 1회 필수: API 키 설정)"
+    echo "4. Portable Shell (독립된 파이썬 가상환경 쉘 열기)"
+    echo "0. Exit (종료)"
     echo
 }
 
