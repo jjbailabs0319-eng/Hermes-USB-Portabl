@@ -1,4 +1,4 @@
-@echo off
+content = """@echo off
 chcp 65001 >nul
 setlocal
 
@@ -7,9 +7,9 @@ set "ROOT=%~dp0"
 set "ROOT=%ROOT:~0,-1%"
 
 :: 2. Configure Local .tmp Cache & Isolation (Zero-Trace)
-set "TMPDIR=%ROOT%\.tmp"
-set "UV_CACHE_DIR=%TMPDIR%\uv-cache"
-set "HERMES_HOME=%ROOT%\data"
+set "TMPDIR=%ROOT%\\.tmp"
+set "UV_CACHE_DIR=%TMPDIR%\\uv-cache"
+set "HERMES_HOME=%ROOT%\\data"
 set "PYTHONUTF8=1"
 
 if not exist "%TMPDIR%" mkdir "%TMPDIR%"
@@ -17,18 +17,18 @@ if not exist "%UV_CACHE_DIR%" mkdir "%UV_CACHE_DIR%"
 if not exist "%HERMES_HOME%" mkdir "%HERMES_HOME%"
 
 :: 3. Download Portable uv if missing
-set "UV_BIN=%TMPDIR%\bin"
+set "UV_BIN=%TMPDIR%\\bin"
 set "PATH=%UV_BIN%;%PATH%"
 
-if not exist "%UV_BIN%\uv.exe" (
+if not exist "%UV_BIN%\\uv.exe" (
     echo [Hermes] Downloading Portable 'uv' package manager...
     if not exist "%UV_BIN%" mkdir "%UV_BIN%"
-    curl -LsSf https://github.com/astral-sh/uv/releases/latest/download/uv-x86_64-pc-windows-msvc.zip -o "%TMPDIR%\uv.zip"
-    powershell -Command "Expand-Archive -Path '%TMPDIR%\uv.zip' -DestinationPath '%TMPDIR%\uv-extracted' -Force"
-    copy /y "%TMPDIR%\uv-extracted\uv-x86_64-pc-windows-msvc\uv.exe" "%UV_BIN%\uv.exe"
-    copy /y "%TMPDIR%\uv-extracted\uv-x86_64-pc-windows-msvc\uvx.exe" "%UV_BIN%\uvx.exe"
-    rmdir /s /q "%TMPDIR%\uv-extracted"
-    del "%TMPDIR%\uv.zip"
+    curl -LsSf https://github.com/astral-sh/uv/releases/latest/download/uv-x86_64-pc-windows-msvc.zip -o "%TMPDIR%\\uv.zip"
+    powershell -Command "Expand-Archive -Path '%TMPDIR%\\uv.zip' -DestinationPath '%TMPDIR%\\uv-extracted' -Force"
+    copy /y "%TMPDIR%\\uv-extracted\\uv-x86_64-pc-windows-msvc\\uv.exe" "%UV_BIN%\\uv.exe"
+    copy /y "%TMPDIR%\\uv-extracted\\uv-x86_64-pc-windows-msvc\\uvx.exe" "%UV_BIN%\\uvx.exe"
+    rmdir /s /q "%TMPDIR%\\uv-extracted"
+    del "%TMPDIR%\\uv.zip"
 )
 
 echo ==================================================
@@ -39,17 +39,17 @@ echo ==================================================
 
 :: 4. Setup Python Virtual Environment using uv
 cd "%ROOT%"
-if not exist "%TMPDIR%\.venv" (
+if not exist "%TMPDIR%\\.venv" (
     echo [Hermes] Creating isolated Python 3.11 environment...
-    call uv venv "%TMPDIR%\.venv" --python 3.11
+    call uv venv "%TMPDIR%\\.venv" --python 3.11
     
     echo [Hermes] Installing core Hermes Agent dependencies...
-    set "VIRTUAL_ENV=%TMPDIR%\.venv"
-    set "PATH=%TMPDIR%\.venv\Scripts;%PATH%"
+    set "VIRTUAL_ENV=%TMPDIR%\\.venv"
+    set "PATH=%TMPDIR%\\.venv\\Scripts;%PATH%"
     call uv pip install -e ".[all]"
 ) else (
-    set "VIRTUAL_ENV=%TMPDIR%\.venv"
-    set "PATH=%TMPDIR%\.venv\Scripts;%PATH%"
+    set "VIRTUAL_ENV=%TMPDIR%\\.venv"
+    set "PATH=%TMPDIR%\\.venv\\Scripts;%PATH%"
 )
 
 :menu
@@ -86,3 +86,7 @@ if "%choice%"=="1" (
 ) else (
     goto menu
 )
+"""
+
+with open('start.bat', 'w', encoding='utf-8', newline='\r\n') as f:
+    f.write(content)
