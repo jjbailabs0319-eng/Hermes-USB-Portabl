@@ -1,58 +1,31 @@
-import { HermesEngine } from './HermesEngine';
-import { eventBridge } from './channels/EventBridge';
-// Import these when tokens are available
-// import { TelegramService } from './channels/Telegram';
-// import { DiscordService } from './channels/Discord';
+import { HermesCore } from './Engine';
+import { SecureGateway } from '../interfaces/Gateway';
 
 async function bootstrap() {
     console.log("==========================================");
-    console.log("🚀 Starting Hermes-Portable Core Engine...");
+    console.log("🚀 Starting Hermes-Portable V2 Engine...");
     console.log("==========================================");
 
-    const engine = new HermesEngine();
-    
-    try {
-        await engine.initialize();
-        console.log("[Core] Engine fully initialized. Waiting for tasks...");
+    const engine = new HermesCore();
+    const gateway = new SecureGateway();
 
-        // Listen for structured commands from the messenger interfaces
-        eventBridge.on('command', async (task) => {
-            console.log(`[Core] Received Task: ${task.id} -> ${task.instruction}`);
-            
-            // 1. Semantic Lookup
-            const pastSkill = await engine.lookupSkillOrMemory(task);
-            if (pastSkill) {
-                console.log(`[Core] 🧠 Found reusable skill: ${pastSkill.skillName}`);
-            }
+    // Setup an initial secure vault if testing
+    gateway.encryptAndStore('my-super-secret-password', {
+        telegramToken: '12345:ABCDEF',
+        discordToken: 'MTEw.Gz12.XYZ',
+        geminiApiKey: 'AIzaSyD...'
+    });
 
-            // 2. Execution (Mocked)
-            console.log(`[Core] Executing task...`);
-            
-            // 3. Self-Evaluation & Learning
-            const mockLog = {
-                taskId: task.id,
-                plan: { steps: ["step1", "step2"] },
-                result: { status: 'success' },
-                success: true,
-                tokensUsed: Math.floor(Math.random() * 2000)
-            };
-            await engine.evaluateAndLearn(mockLog);
-        });
+    gateway.on('command', async (event) => {
+        await engine.executeTaskLoop(event.message, event.rawPayload);
+    });
 
-        // Initialize Discord/Telegram with credentials securely loaded from semantic memory
-        // const creds = await engine.loadSecureCredentials('messengers');
-        // if (creds?.telegramToken) new TelegramService(creds.telegramToken).start();
-        // if (creds?.discordToken) new DiscordService(creds.discordToken);
-        
-        process.on('SIGINT', () => {
-            console.log("\n[Core] Shutting down Hermes-Portable Engine gracefully.");
-            process.exit(0);
-        });
+    gateway.startPolling();
 
-    } catch (err) {
-        console.error("[Core] Failed to initialize HermesEngine:", err);
-        process.exit(1);
-    }
+    process.on('SIGINT', () => {
+        console.log("\n[Core] Shutting down Hermes-Portable V2 Engine gracefully.");
+        process.exit(0);
+    });
 }
 
 bootstrap();
