@@ -1,0 +1,4 @@
+platforms:
+  telegram:
+    enabled: false
+    token: ""
