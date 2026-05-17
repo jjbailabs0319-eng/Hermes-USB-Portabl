@@ -1,6 +1,5 @@
-# OpenClaw USB Portable ⚡
-
-Run OpenClaw from a portable workspace on Windows, Linux, and macOS.
+# Hermes Agent USB Portable ??
+Run Hermes Agent from a portable workspace on Windows, Linux, and macOS.
 
 <p>
   <img alt="Windows" src="https://img.shields.io/badge/Windows-run.bat-0078D4?style=flat-square">
@@ -10,7 +9,7 @@ Run OpenClaw from a portable workspace on Windows, Linux, and macOS.
   <img alt="License" src="https://img.shields.io/badge/license-MIT-blue?style=flat-square">
 </p>
 
-OpenClaw USB Portable is a launcher project for people who want the same OpenClaw workspace available across multiple computers without installing Node.js, npm, or OpenClaw globally on each machine.
+Hermes Agent USB Portable is a launcher project for people who want the same Hermes Agent workspace available across multiple computers without installing Node.js, npm, or Hermes Agent globally on each machine.
 
 The user-facing entrypoints are intentionally simple:
 
@@ -21,17 +20,16 @@ run.sh    Linux and macOS
 
 Everything else is internal runtime, configuration, or portable workspace data.
 
-## What It Does ✨
-
+## What It Does ??
 - Downloads a portable Node.js runtime into this project on first run.
-- Installs OpenClaw into a project-local package folder.
-- Keeps OpenClaw config, sessions, workspace files, memory, and generated state under `data/`.
+- Installs Hermes Agent into a project-local package folder.
+- Keeps Hermes Agent config, sessions, workspace files, memory, and generated state under `data/`.
 - Uses one shared portable workspace across Windows, Linux, and macOS.
 - Keeps generated runtime files, logs, credentials, and chat history out of Git.
 
 This is a portable workspace, not a single universal binary. Each operating system has its own runtime because Windows, Linux, and macOS use different binaries.
 
-## Quick Start 🚀
+## Quick Start ??
 
 ### Windows
 
@@ -55,27 +53,27 @@ Run:
 sh run.sh
 ```
 
-First run on each operating system needs internet access to download that OS runtime and install OpenClaw. After that, the same OS can reuse its portable runtime from the drive.
+First run on each operating system needs internet access to download that OS runtime and install Hermes Agent. After that, the same OS can reuse its portable runtime from the drive.
 
 ## Main Menu
 
 ```text
-Portable OpenClaw
+Portable Hermes Agent
 
 1. Setup / Change AI
 2. Chat
 3. Dashboard
 4. Tools
-5. Run OpenClaw Command
+5. Run Hermes Agent Command
 0. Exit
 ```
 
 Use `Setup / Change AI` first to configure your model provider. After setup, use `Chat` or `Dashboard` for daily work.
 
-`Run OpenClaw Command` is available for commands shown by OpenClaw itself, for example:
+`Run Hermes Agent Command` is available for commands shown by Hermes Agent itself, for example:
 
 ```text
-openclaw pairing approve telegram R2F8ZL5S
+Hermes Agent pairing approve telegram R2F8ZL5S
 ```
 
 ## Portable Data Model
@@ -84,8 +82,8 @@ Shared state lives under `data/`:
 
 ```text
 data/
-  config/       OpenClaw config
-  openclaw/     OpenClaw state, sessions, logs, memory, canvas data
+  config/       Hermes Agent config
+  Hermes Agent/     Hermes Agent state, sessions, logs, memory, canvas data
   home/         Portable home directory used by tools
   workspace/    Files the agent works on
   temp/         Temporary files
@@ -95,7 +93,7 @@ Generated platform-specific files live outside `data/`:
 
 ```text
 runtime/        Portable Node.js runtimes
-packages/       OpenClaw installs and npm cache
+packages/       Hermes Agent installs and npm cache
 logs/           Launcher and install logs
 ```
 
@@ -104,7 +102,7 @@ These folders are ignored by Git because they may contain large binaries, local 
 ## Project Layout
 
 ```text
-OpenClaw-USB-Portable/
+Hermes Agent-USB-Portable/
   run.bat
   run.sh
   README.md
@@ -119,7 +117,7 @@ OpenClaw-USB-Portable/
     portable-env.sh
 
   templates/
-    openclaw.portable.json
+    Hermes Agent.portable.json
 
   data/
     .gitkeep
@@ -146,7 +144,7 @@ runtime/
 packages/
 logs/
 data/config/
-data/openclaw/
+data/Hermes Agent/
 data/home/
 data/workspace/
 data/temp/
@@ -156,8 +154,8 @@ Do not commit these folders unless you intentionally want to publish local runti
 
 ## Typical Use Cases
 
-- Carry the same OpenClaw workspace between laptops.
-- Use OpenClaw on a clean machine without installing Node.js globally.
+- Carry the same Hermes Agent workspace between laptops.
+- Use Hermes Agent on a clean machine without installing Node.js globally.
 - Keep model setup, sessions, and workspace files together in one portable folder.
 - Record demos or tutorials without relying on a machine-specific development environment.
 

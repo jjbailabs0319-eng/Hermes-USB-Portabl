@@ -7,7 +7,7 @@ set "EXITCODE=%ERRORLEVEL%"
 
 if not "%EXITCODE%"=="0" (
   echo.
-  echo Portable OpenClaw stopped with error code %EXITCODE%.
+  echo Portable Hermes Agent stopped with error code %EXITCODE%.
   pause
 )
 

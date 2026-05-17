@@ -1,7 +1,7 @@
 {
   "agents": {
     "defaults": {
-      "workspace": "${OPENCLAW_PORTABLE_WORKSPACE}"
+      "workspace": "${HERMES_AGENT_PORTABLE_WORKSPACE}"
     }
   },
   "gateway": {
