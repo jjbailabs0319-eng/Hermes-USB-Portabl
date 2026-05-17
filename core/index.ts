@@ -1,5 +1,5 @@
 import { HermesCore } from './Engine';
-import { SecureGateway } from '../interfaces/Gateway';
+import { SecureGateway, MessengerEvent } from '../interfaces/Gateway';
 
 async function bootstrap() {
     console.log("==========================================");
@@ -16,11 +16,11 @@ async function bootstrap() {
         geminiApiKey: 'AIzaSyD...'
     });
 
-    gateway.on('command', async (event) => {
+    gateway.on('command', async (event: MessengerEvent) => {
         await engine.executeTaskLoop(event.message, event.rawPayload);
     });
 
-    gateway.startPolling();
+    await gateway.startPolling('my-super-secret-password');
 
     process.on('SIGINT', () => {
         console.log("\n[Core] Shutting down Hermes-Portable V2 Engine gracefully.");

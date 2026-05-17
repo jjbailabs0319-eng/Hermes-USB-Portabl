@@ -84,26 +84,67 @@ export class SecureGateway extends EventEmitter {
             
             return JSON.parse(decrypted);
         } catch (err) {
-            console.error(`[Gateway] Vault decryption failed (Wrong password?):`, err.message);
+            console.error(`[Gateway] Vault decryption failed (Wrong password?):`, (err as Error).message);
             return null;
         }
     }
 
     /**
-     * Start Telegram/Discord polling mock
+     * Start Telegram/Discord polling using Secure Vault credentials
      */
-    public startPolling() {
+    public async startPolling(password: string) {
+        console.log(`[Gateway] Decrypting Secure Vault...`);
+        const credentials = this.decryptVault(password);
+        
+        if (!credentials) {
+            console.error(`[Gateway] ❌ Failed to start polling. Invalid password or missing vault.`);
+            return;
+        }
+
         console.log(`[Gateway] Listening for Telegram / Discord Webhooks & Polling...`);
-        // Simulated incoming message event
-        setTimeout(() => {
-            this.emitMessage({
-                channel: 'telegram',
-                userId: '123456789',
-                message: 'Hello Hermes, optimize my workspace.',
-                timestamp: Date.now(),
-                rawPayload: {}
+
+        // Initialize Telegram
+        if (credentials.telegramToken) {
+            const { Bot } = require('grammy');
+            const bot = new Bot(credentials.telegramToken);
+            bot.on('message:text', (ctx: any) => {
+                this.emitMessage({
+                    channel: 'telegram',
+                    userId: ctx.from.id.toString(),
+                    message: ctx.message.text,
+                    timestamp: Date.now(),
+                    rawPayload: ctx.message
+                });
             });
-        }, 2000);
+            bot.start().catch((err: any) => console.error('[Gateway] Telegram Error:', err));
+            console.log(`[Gateway] ✅ Telegram Bot polling started.`);
+        }
+
+        // Initialize Discord
+        if (credentials.discordToken) {
+            const { Client, GatewayIntentBits } = require('discord.js');
+            const client = new Client({
+                intents: [
+                    GatewayIntentBits.Guilds,
+                    GatewayIntentBits.GuildMessages,
+                    GatewayIntentBits.MessageContent
+                ]
+            });
+
+            client.on('messageCreate', (message: any) => {
+                if (message.author.bot) return;
+                this.emitMessage({
+                    channel: 'discord',
+                    userId: message.author.id,
+                    message: message.content,
+                    timestamp: message.createdTimestamp,
+                    rawPayload: message
+                });
+            });
+
+            client.login(credentials.discordToken).catch((err: any) => console.error('[Gateway] Discord Error:', err));
+            client.on('ready', () => console.log(`[Gateway] ✅ Discord Bot polling started.`));
+        }
     }
 
     private emitMessage(event: MessengerEvent) {
